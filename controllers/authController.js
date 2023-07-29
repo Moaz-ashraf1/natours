@@ -24,6 +24,7 @@ const createAndSendToken = (user, statusCode, res) => {
 
   res.cookie('JWT', token, cookieOption);
   user.password = undefined;
+  console.log(user);
   res.status(statusCode).json({
     status: 'Sucess',
     token,
@@ -32,6 +33,7 @@ const createAndSendToken = (user, statusCode, res) => {
     }
   });
 };
+
 exports.singUp = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
@@ -54,7 +56,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // 2) check if user exists &password is select
   const user = await User.findOne({ email }).select('+password');
-
+  console.log(user);
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password'), 404);
   }
@@ -66,6 +68,7 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.protect = async (req, res, next) => {
   try {
     // 1)Getting token and check of it's there
+    //    "token": DrpEA
     let token;
     if (
       req.headers.authorization &&
@@ -73,28 +76,12 @@ exports.protect = async (req, res, next) => {
     ) {
       token = req.headers.authorization.split(' ')[1];
     }
+
     if (!token) {
       return next(
         new AppError('You are not logged in! please login to get access', 401)
       );
     }
-
-    // 2) Vertification token
-    // JWT.vertify(
-    //     token,
-    //     process.env.JWT_EXPIRES_IN,
-    //     (error, decoded) => {
-    //       if (error) {
-    //         // Handle the error
-    //         console.error(error);
-    //         // ...
-    //       } else {
-    //         // Use the decoded data
-    //         console.log(decoded);
-    //         // ...
-    //       }
-    //     }
-    //   );
 
     const decoded = await promisify(JWT.verify)(token, process.env.JWT_SECRET);
 
@@ -164,7 +151,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       message: 'Token sent to email!'
     });
   } catch (err) {
-    console.log(err);
     user.passwordResetToken = undefined;
     user.passwordResetExpire = undefined;
     await user.save({ validateBeforeSave: false });
@@ -182,7 +168,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     .createHash('sha256')
     .update(req.params.token)
     .digest('hex');
-  console.log(Date.now());
   const user = await User.findOne({
     passwordResetToken: hashedToken
   });
@@ -221,6 +206,4 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   //4) Log user in, send JWT
 
   createAndSendToken(user, 200, res);
-
-  console.log(user);
 });

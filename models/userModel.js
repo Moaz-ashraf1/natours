@@ -55,7 +55,15 @@ userSchema.pre('save', async function(next) {
   this.passwordConfirm = undefined;
   next();
 });
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password') || this.isNew) {
+    return next();
+  }
+  this.passwordChangedAt = Date.now() - 1000;
+  console.log(this.passwordChangeAt);
 
+  next();
+});
 userSchema.pre(/^find/, function(next) {
   this.find({ active: { $ne: false } });
   next();
@@ -91,14 +99,5 @@ userSchema.methods.createPasswordResetToken = function() {
   return resetToken;
 };
 
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password') || this.isNew) {
-    return next();
-  }
-  this.passwordChangedAt = Date.now() - 1000;
-  console.log(this.passwordChangeAt);
-
-  next();
-});
 const User = mongoose.model('User', userSchema);
 module.exports = User;
