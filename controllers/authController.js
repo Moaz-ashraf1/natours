@@ -24,9 +24,8 @@ const createAndSendToken = (user, statusCode, res) => {
 
   res.cookie('JWT', token, cookieOption);
   user.password = undefined;
-  console.log(user);
   res.status(statusCode).json({
-    status: 'Sucess',
+    status: 'success',
     token,
     data: {
       user
@@ -56,9 +55,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // 2) check if user exists &password is select
   const user = await User.findOne({ email }).select('+password');
-  console.log(user);
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError('Incorrect email or password'), 404);
+    return next(new AppError('Incorrect email or password', 404));
   }
 
   // if everything ok, send token to client
@@ -75,8 +73,9 @@ exports.protect = async (req, res, next) => {
       req.headers.authorization.startsWith('Bearer')
     ) {
       token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies.JWT) {
+      token = req.cookies.JWT;
     }
-
     if (!token) {
       return next(
         new AppError('You are not logged in! please login to get access', 401)
@@ -110,6 +109,31 @@ exports.protect = async (req, res, next) => {
   }
 };
 
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  //1) vertify token
+  if (req.cookies.JWT) {
+    const decoded = await promisify(JWT.verify)(
+      req.cookies.JWT,
+      process.env.JWT_SECRET
+    );
+
+    //2) Check if user exist
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      return next();
+    }
+
+    //3) Check if user changed password after the token was issued
+    if (currentUser.changePasswordAfter(decoded.iat)) {
+      return next();
+    }
+    //4) There is a logged in user
+    res.locals.user = currentUser;
+    return next();
+  }
+
+  next();
+});
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

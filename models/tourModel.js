@@ -90,7 +90,7 @@ const tourSchema = new mongoose.Schema(
     },
 
     // FEW:FEW & Embedding
-    location: [
+    locations: [
       {
         type: {
           type: String,
