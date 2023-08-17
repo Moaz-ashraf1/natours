@@ -67,7 +67,17 @@ exports.getOne = (model, popOptions) =>
 exports.getAll = model =>
   catchAsync(async (req, res, next) => {
     let filter;
-    filter = req.params.tourID ? { tour: req.params.tourID } : {};
+    if (req.params.userId) {
+      // For user bookings
+      filter = { user: req.params.userId };
+    } else if (req.params.tourId) {
+      // For tour bookings
+      filter = { tour: req.params.tourId };
+    } else {
+      // No specific user or tour specified, return all bookings
+      filter = {};
+    }
+
     const features = new APIFeatures(model.find(filter), req.query)
       .filter()
       .sort()

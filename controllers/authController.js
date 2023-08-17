@@ -4,7 +4,7 @@ const AppError = require('./../utils/appError');
 const { promisify } = require('util');
 const JWT = require('jsonwebtoken');
 const crypto = require('crypto');
-const sendEmail = require('../utils/sendEmail');
+const Email = require('../utils/sendEmail');
 
 const signToken = id => {
   return JWT.sign({ id }, process.env.JWT_SECRET, {
@@ -15,11 +15,12 @@ const signToken = id => {
 const createAndSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
   const cookieOption = {
-    expiresIn: new Date(
+    expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 60 * 1000
     ),
-    httpOnly: true
+    httpOnly: true // cookie can be deleted from the browser, but it cannot be edited or read by JavaScript code running in the browser.
   };
+
   if (process.env.NODE_ENV === 'production') cookieOption.secure = true;
 
   res.cookie('JWT', token, cookieOption);
@@ -42,7 +43,8 @@ exports.singUp = catchAsync(async (req, res, next) => {
     passwordChangeAt: req.body.passwordChangeAt,
     role: req.body.role
   });
-
+  const url = `${req.protocol}://${req.get('host')}/me`;
+  await new Email(newUser, url).sendWelcomMessage();
   createAndSendToken(newUser, 201, res);
 });
 
@@ -63,6 +65,14 @@ exports.login = catchAsync(async (req, res, next) => {
   createAndSendToken(user, 201, res);
 });
 
+exports.logout = catchAsync(async (req, res) => {
+  res.cookie('JWT', 'logout', {
+    expires: new Date(Date.now() + 10000),
+    httpOnly: true
+  });
+
+  res.status(200).json({ status: 'success' });
+});
 exports.protect = async (req, res, next) => {
   try {
     // 1)Getting token and check of it's there
@@ -103,37 +113,43 @@ exports.protect = async (req, res, next) => {
     }
 
     req.user = currentUser;
+    res.locals.user = currentUser;
     next();
   } catch (error) {
     next(error);
   }
 };
 
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
-  //1) vertify token
-  if (req.cookies.JWT) {
-    const decoded = await promisify(JWT.verify)(
-      req.cookies.JWT,
-      process.env.JWT_SECRET
-    );
+exports.isLoggedIn = async (req, res, next) => {
+  try {
+    //1) vertify token
+    if (req.cookies.JWT) {
+      const decoded = await promisify(JWT.verify)(
+        req.cookies.JWT,
+        process.env.JWT_SECRET
+      );
 
-    //2) Check if user exist
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
+      //2) Check if user exist
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        return next();
+      }
+
+      //3) Check if user changed password after the token was issued
+      if (currentUser.changePasswordAfter(decoded.iat)) {
+        return next();
+      }
+      //4) There is a logged in user
+      res.locals.user = currentUser;
       return next();
     }
-
-    //3) Check if user changed password after the token was issued
-    if (currentUser.changePasswordAfter(decoded.iat)) {
-      return next();
-    }
-    //4) There is a logged in user
-    res.locals.user = currentUser;
+  } catch (error) {
+    console.log(error);
     return next();
   }
 
   next();
-});
+};
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
@@ -161,14 +177,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     'host'
   )}/api/v1/users/resetPassword/${resetToken}`;
 
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
-
   try {
-    await sendEmail({
-      email: user.email,
-      subject: 'Your password reset token (valid for 10 min)',
-      message
-    });
+    await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
       status: 'success',
@@ -218,9 +228,10 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   // 2)check if POSTed current Password is correct
 
-  if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
     return next(new AppError('Your current password is wrong.', 401));
   }
+  console.log(user);
 
   // 3)update Password
   user.password = req.body.password;

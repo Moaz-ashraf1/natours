@@ -2,6 +2,7 @@ const express = require('express');
 
 const authController = require('./../controllers/authController');
 const reviewController = require('./../controllers/reviewController');
+const bookingController = require('./../controllers/bookingController');
 const router = express.Router({ mergeParams: true });
 
 // POST tour/1234/reviews
@@ -14,6 +15,7 @@ router
   .post(
     authController.restrictTo('user'),
     reviewController.setTourAndUser,
+    bookingController.checkIfBooked,
     reviewController.createReview
   );
 

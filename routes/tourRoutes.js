@@ -2,12 +2,13 @@ const express = require('express');
 const tourController = require('./../controllers/tourController');
 const authController = require('./../controllers/authController');
 const reviewRouter = require('./reviewRoute');
+const bookingRouter = require('./bookingRoute');
 const router = express.Router();
 
 // router.param('id', tourController.checkID);
 
-router.use('/:tourID/review', reviewRouter);
-
+router.use('/:tourId/review', reviewRouter);
+router.use('/:tourId/bookings', bookingRouter);
 router
   .route('/tour-within/:distance/center/:latlng/unit/:unit')
   .get(tourController.getTourWithin);
@@ -40,6 +41,8 @@ router
   .patch(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide'),
+    tourController.uploadTourPhoto,
+    tourController.resizeTourPhoto,
     tourController.updateTour
   )
   .delete(
