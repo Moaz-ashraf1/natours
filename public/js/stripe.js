@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { showAlert } from './alerts';
 
 export const bookTour = async tourId => {
   try {
