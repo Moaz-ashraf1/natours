@@ -8,13 +8,14 @@
     "start:prod": "NODE_ENV=production nodemon server.js",
     "debug": "ndb server.js",
     "watch:js": "esbuild --watch ./public/js/index.js --bundle --outfile=./public/js/bundle.js",
-    "build:js": "esbuild --watch ./public/js/index.js --bundle --outfile=./public/js/bundle.js"
+    "build:js": "esbuild ./public/js/index.js --bundle --outfile=./public/js/bundle.js"
   },
   "author": "Jonas Schmedtmann",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "core-js": "^3.32.0",
     "crypto": "^1.0.1",

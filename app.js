@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const compression = require('compression');
 const csp = require('express-csp');
 const hpp = require('hpp');
 const pug = require('pug');
@@ -132,6 +133,8 @@ app.use(
 
 //Serving static files
 app.use(express.static(`${__dirname}/public`));
+
+app.use(compression());
 
 // Test middleware
 app.use((req, res, next) => {
