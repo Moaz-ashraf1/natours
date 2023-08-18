@@ -54,6 +54,7 @@ Follow these steps to set up your local environment for the Natours app:
       ```dotenv
       # MongoDB Configuration
       DATABASE=your-mongodb-database-url
+      USERNAME=your-mongodb-username 
       DATABASE_PASSWORD=your-mongodb-password
 
       # JSON Web Token Configuration
