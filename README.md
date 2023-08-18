@@ -61,17 +61,6 @@ Follow these steps to set up your local environment for the Natours app:
       JWT_EXPIRES_IN=90d
       JWT_COOKIE_EXPIRES_IN=90
 
-      # Email Configuration (Mailtrap for development)
-      EMAIL_USERNAME=your-mailtrap-username
-      EMAIL_PASSWORD=your-mailtrap-password
-      EMAIL_HOST=smtp.mailtrap.io
-      EMAIL_PORT=2525
-      EMAIL_FROM=your-real-life-email-address
-
-      # SendGrid Configuration (for production)
-      SENDGRID_USERNAME=apikey
-      SENDGRID_PASSWORD=your-sendgrid-password
-
       # Stripe Configuration
       STRIPE_SECRET_KEY=your-stripe-secret-key
       STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
