@@ -9,11 +9,6 @@ const { async } = require('regenerator-runtime');
 // catchAsync(async(ree,res,next)=>{
 
 // })
-exports.createBooking = factory.createOne(Booking);
-exports.getBooking = factory.getOne(Booking);
-exports.getAllBookings = factory.getAll(Booking);
-exports.updateBooking = factory.updateOne(Booking);
-exports.deleteBooking = factory.deleteOne(Booking);
 
 exports.checkIfBooked = catchAsync(async (req, res, next) => {
   const booking = await Booking.find({
@@ -70,7 +65,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 const createBookingCheckout = async session => {
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email }))._id;
-  const price = session.line_items[0].price_data.unit_amount / 100;
+  const price = session.amount_total / 100;
   await Booking.create({ tour, user, price });
 };
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
@@ -100,3 +95,8 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
 //   await Booking.create({ tour, user, price });
 //   res.redirect(req.originalUrl.split('?')[0]);
 // });
+exports.createBooking = factory.createOne(Booking);
+exports.getBooking = factory.getOne(Booking);
+exports.getAllBookings = factory.getAll(Booking);
+exports.updateBooking = factory.updateOne(Booking);
+exports.deleteBooking = factory.deleteOne(Booking);

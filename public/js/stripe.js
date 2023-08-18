@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { showAlert } from './alerts';
 export const bookTour = async tourId => {
   try {
     const stripe = Stripe(
@@ -11,8 +11,8 @@ export const bookTour = async tourId => {
     await stripe.redirectToCheckout({
       sessionId: session.data.session.id
     });
-  } catch (error) {
-    console.log(error);
-    alert('error', error);
+  } catch (err) {
+    console.log(err);
+    showAlert('error', err);
   }
 };

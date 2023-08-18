@@ -16,7 +16,7 @@ router
 
 router
   .route('/:id')
-  .get(authController.restrictTo(''), bookingController.getBooking)
+  .get(bookingController.getBooking)
   .patch(bookingController.updateBooking)
   .delete(bookingController.deleteBooking);
 
