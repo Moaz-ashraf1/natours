@@ -4,6 +4,19 @@
 
 Welcome to Natours! This application is designed to showcase the beauty of nature and provide adventurous tours to various destinations. Experience breathtaking landscapes, exciting activities, and a community of fellow nature enthusiasts. Dive into the wild with Natours!
 
+## Natours App Screenshots 📷
+
+Explore these screenshots to get a glimpse of the Natours app:
+
+![Screenshot 1](https://imgur.com/XQ4QSw0)
+*Caption: Log into your account*
+
+![Screenshot 2](https://imgur.com/gf7YQnG)
+*Caption: Your account settings*
+
+
+
+
 ## Technologies 🚀
 
 - Node.js
