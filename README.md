@@ -52,6 +52,7 @@ Follow these steps to set up your local environment for the Natours app:
       Replace the placeholders with your actual information. You might need to sign up for accounts and services to obtain the required credentials.
 
       ```dotenv
+      
       # MongoDB Configuration
       DATABASE=your-mongodb-database-url
       USERNAME=your-mongodb-username 
@@ -65,4 +66,13 @@ Follow these steps to set up your local environment for the Natours app:
       # Stripe Configuration
       STRIPE_SECRET_KEY=your-stripe-secret-key
       STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
+
       ```
+## Project Demo
+
+Explore the Natours app in action:
+
+[**Natours App Demo**](https://natours-moaz.up.railway.app/my-tours)
+
+Visit the above link to experience the Natours app and its features live.
+   
