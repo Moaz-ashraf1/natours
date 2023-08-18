@@ -9,7 +9,6 @@ Welcome to Natours! This application is designed to showcase the beauty of natur
 Explore these screenshots to get a glimpse of the Natours app:
 
 [Imgur](https://i.imgur.com/GMIYygn.png)
-*Caption: Log into your account*
 
 ![Screenshot 2](https://imgur.com/gf7YQnG)
 *Caption: Your account settings*
