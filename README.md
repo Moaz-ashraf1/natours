@@ -43,36 +43,36 @@ Follow these steps to set up your local environment for the Natours app:
    ```
 3. **Configure Environment Variables:**
 
-Before you can run the Natours app, you need to set up your environment variables. These variables store sensitive information required for the app to function properly. Follow these steps to configure your environment variables:
+   Before you can run the Natours app, you need to set up your environment variables. These variables store sensitive information required for the app to function properly. Follow these steps to configure your environment variables:
 
-1. **Create a `.env` File:**
-   In the root directory of the app, create a file named `.env`.
+   1. **Create a `.env` File:**
+      In the root directory of the app, create a file named `.env`.
 
-2. **Add the Following Environment Variables:**
-   Replace the placeholders with your actual information. You might need to sign up for accounts and services to obtain the required credentials.
+   2. **Add the Following Environment Variables:**
+      Replace the placeholders with your actual information. You might need to sign up for accounts and services to obtain the required credentials.
 
-   ```dotenv
-   # MongoDB Configuration
-   DATABASE=your-mongodb-database-url
-   DATABASE_PASSWORD=your-mongodb-password
+      ```dotenv
+      # MongoDB Configuration
+      DATABASE=your-mongodb-database-url
+      DATABASE_PASSWORD=your-mongodb-password
 
-   # JSON Web Token Configuration
-   SECRET=your-json-web-token-secret
-   JWT_EXPIRES_IN=90d
-   JWT_COOKIE_EXPIRES_IN=90
+      # JSON Web Token Configuration
+      SECRET=your-json-web-token-secret
+      JWT_EXPIRES_IN=90d
+      JWT_COOKIE_EXPIRES_IN=90
 
-   # Email Configuration (Mailtrap for development)
-   EMAIL_USERNAME=your-mailtrap-username
-   EMAIL_PASSWORD=your-mailtrap-password
-   EMAIL_HOST=smtp.mailtrap.io
-   EMAIL_PORT=2525
-   EMAIL_FROM=your-real-life-email-address
+      # Email Configuration (Mailtrap for development)
+      EMAIL_USERNAME=your-mailtrap-username
+      EMAIL_PASSWORD=your-mailtrap-password
+      EMAIL_HOST=smtp.mailtrap.io
+      EMAIL_PORT=2525
+      EMAIL_FROM=your-real-life-email-address
 
-   # SendGrid Configuration (for production)
-   SENDGRID_USERNAME=apikey
-   SENDGRID_PASSWORD=your-sendgrid-password
+      # SendGrid Configuration (for production)
+      SENDGRID_USERNAME=apikey
+      SENDGRID_PASSWORD=your-sendgrid-password
 
-   # Stripe Configuration
-   STRIPE_SECRET_KEY=your-stripe-secret-key
-   STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
-   ```
+      # Stripe Configuration
+      STRIPE_SECRET_KEY=your-stripe-secret-key
+      STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
+      ```
