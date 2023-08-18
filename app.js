@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const cors = require('cors');
 const compression = require('compression');
 const csp = require('express-csp');
 const hpp = require('hpp');
@@ -24,7 +25,9 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // 1) MIDDLEWARES
-
+// Implement CORS
+app.use(cors());
+app.options('*', cors());
 // Set security HTTP headers
 app.use(helmet());
 csp.extend(app, {
