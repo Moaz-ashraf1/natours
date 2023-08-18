@@ -8,13 +8,7 @@ router
   .route('/tour/:slug')
   .get(authController.isLoggedIn, viewController.getTour);
 
-router
-  .route('/')
-  .get(
-    bookingController.createBookingCheckout,
-    authController.isLoggedIn,
-    viewController.getOverview
-  );
+router.route('/').get(authController.isLoggedIn, viewController.getOverview);
 
 router
   .route('/my-tours')
