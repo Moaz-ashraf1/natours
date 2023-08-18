@@ -4,17 +4,6 @@
 
 Welcome to Natours! This application is designed to showcase the beauty of nature and provide adventurous tours to various destinations. Experience breathtaking landscapes, exciting activities, and a community of fellow nature enthusiasts. Dive into the wild with Natours!
 
-## Natours App Screenshots 📷
-
-Explore these screenshots to get a glimpse of the Natours app:
-
-[Imgur](https://i.imgur.com/GMIYygn.png)
-
-![Screenshot 2](https://imgur.com/gf7YQnG)
-*Caption: Your account settings*
-
-
-
 
 ## Technologies 🚀
 
@@ -30,6 +19,7 @@ Explore these screenshots to get a glimpse of the Natours app:
 - Nodemailer
 - Gmail
 
+
 ## Features ✨
 
 - Browse and book a variety of nature tours.
@@ -37,6 +27,7 @@ Explore these screenshots to get a glimpse of the Natours app:
 - User authentication and account management.
 - Interactive maps to visualize tour destinations.
 - Tour reviews and ratings by fellow travelers.
+
 
 ## Setting Up Your Local Environment
 
@@ -80,6 +71,8 @@ Follow these steps to set up your local environment for the Natours app:
       STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
 
       ```
+
+
 ## Project Demo 🎬
 
 Explore the Natours app in action:
