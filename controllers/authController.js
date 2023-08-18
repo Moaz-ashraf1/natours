@@ -12,16 +12,16 @@ const signToken = id => {
   });
 };
 
-const createAndSendToken = (user, statusCode, res) => {
+const createAndSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
   const cookieOption = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 60 * 1000
     ),
-    httpOnly: true // cookie can be deleted from the browser, but it cannot be edited or read by JavaScript code running in the browser.
-  };
+    httpOnly: true, // cookie can be deleted from the browser, but it cannot be edited or read by JavaScript code running in the browser.
 
-  if (process.env.NODE_ENV === 'production') cookieOption.secure = true;
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+  };
 
   res.cookie('JWT', token, cookieOption);
   user.password = undefined;
@@ -45,7 +45,7 @@ exports.singUp = catchAsync(async (req, res, next) => {
   });
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(newUser, url).sendWelcomMessage();
-  createAndSendToken(newUser, 201, res);
+  createAndSendToken(newUser, 201, req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -62,7 +62,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // if everything ok, send token to client
-  createAndSendToken(user, 201, res);
+  createAndSendToken(user, 201, req, res);
 });
 
 exports.logout = catchAsync(async (req, res) => {
@@ -219,7 +219,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   //log the user in, send JWT
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -240,5 +240,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   //4) Log user in, send JWT
 
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
