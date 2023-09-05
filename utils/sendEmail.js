@@ -13,21 +13,21 @@ module.exports = class email {
   newTransport() {
     //Create a transporter
     if (process.env.NODE_ENV === 'production') {
-      return nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'moaza2298@gmail.com',
-          pass: 'thzqwknmyplzyyiv'
-        }
-      });
+      returnnodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
     }
     return nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'moaza2298@gmail.com',
-        pass: 'thzqwknmyplzyyiv'
-      }
-    });
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
   }
 
   async send(template, subject) {
